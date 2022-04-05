@@ -8,60 +8,12 @@
 //
 //
 /////////////////////////////////////////////////////////////////////////
-
-
-
 #include <Arduino.h>
 #include <stdio.h>
 #include <time.h>
 #include <LedDisplayClock.h>
 
-
-void ConvertHoursToBinary(int hour)
-{
-
-}
-
-void ConvertMinutesToBinary(int minute)
-{
-
-}
-
-void ConvertMonthToBinary(int month)
-{
-    // 8,4,2,1
-    int a[]={0,0,0,0}; 
-    for(int i=0;month>0;i++)    
-      {    
-        a[i]= month % 2;    
-        month=month / 2;    
-      }
-
-    for(int j=0; j < 4 ;j++)
-      {   
-        Serial.printf("%d",a[j]);
-      }
-    Serial.println(" Month in Binary");
-}
-
-void ConvertDayToBinary(int day)
-{
-    // 32,16,8,4,2,1
-    int a[]={0,0,0,0,0,0}; 
-    for(int i=0;day>0;i++)    
-      {    
-        a[i]= day % 2;    
-        day=day / 2;    
-      }
-
-    for(int j=0; j < 6 ;j++)
-      {   
-        Serial.printf("%d",a[j]);
-      }
-    Serial.println(" day in Binary");
-}
-
-void ConvertTimeToBinary(int Seconds, int Minutes,int Hours)
+void ConvertTimeToBinary(int Seconds, int Minutes,int Hours, int Days, int Months)
 {
     // Binary Hours will in 12 AM/PM Format
     // 16,8,4,2,1 Saves LED Space
@@ -78,7 +30,7 @@ void ConvertTimeToBinary(int Seconds, int Minutes,int Hours)
       }
     Serial.println(" Hour in Binary");
 
- // 32,16,8,4,2,1 - Minutes
+    // 32,16,8,4,2,1 - Minutes
     int MinutesBinary[]={0,0,0,0,0,0}; 
     for(int i=0;Minutes>0;i++)    
       {    
@@ -92,7 +44,7 @@ void ConvertTimeToBinary(int Seconds, int Minutes,int Hours)
       }
     Serial.println(" Minute in Binary");
  
- // 32,16,8,4,2,1 Seconds
+    // 32,16,8,4,2,1 Seconds
     int SecondsBinary[]={0,0,0,0,0,0}; 
     for(int i=0;Seconds>0;i++)    
       {    
@@ -105,7 +57,35 @@ void ConvertTimeToBinary(int Seconds, int Minutes,int Hours)
         Serial.printf("%d",SecondsBinary[j]);
       }
     Serial.println(" seconds in Binary");
-    DisplayTime(SecondsBinary,MinutesBinary,HoursBinary);
+
+    // 32,16,8,4,2,1
+    int DaysBinary[]={0,0,0,0,0,0}; 
+    for(int i=0;Days>0;i++)    
+      {    
+        DaysBinary[i]= Days % 2;    
+        Days=Days / 2;    
+      }
+
+    for(int j=0; j < 6 ;j++)
+      {   
+        Serial.printf("%d",DaysBinary[j]);
+      }
+    Serial.println(" day in Binary");
+
+    // 8,4,2,1
+    int MonthBinary[]={0,0,0,0}; 
+    for(int i=0;Months>0;i++)    
+      {    
+        MonthBinary[i]= Months % 2;    
+        Months=Months / 2;    
+      }
+
+    for(int j=0; j < 4 ;j++)
+      {   
+        Serial.printf("%d",MonthBinary[j]);
+      }
+    Serial.println(" Month in Binary");
+    DisplayTime(SecondsBinary,MinutesBinary,HoursBinary,DaysBinary,MonthBinary);
 
 }
 
@@ -126,15 +106,9 @@ void SetTime()
 
 void GetTime()
 {
-
 // Gets Time From Time Source
 time_t t = time(NULL);
 struct tm tm = *localtime(&t);
 Serial.printf("now: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-ConvertHoursToBinary(tm.tm_hour);
-ConvertMinutesToBinary(tm.tm_min);
-//ConvertSecondsToBinary(tm.tm_sec);
-ConvertMonthToBinary(tm.tm_mon + 1);
-ConvertDayToBinary(tm.tm_mday);
-ConvertTimeToBinary(tm.tm_sec,tm.tm_min,tm.tm_hour);
+ConvertTimeToBinary(tm.tm_sec,tm.tm_min,tm.tm_hour,tm.tm_mday,tm.tm_mon + 1);
 }
