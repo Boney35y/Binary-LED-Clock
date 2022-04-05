@@ -61,7 +61,7 @@ void ConvertDayToBinary(int day)
     Serial.println(" day in Binary");
 }
 
-void ConvertTimeToBinary(int Seconds, int Hours, int Minutes)
+void ConvertTimeToBinary(int Seconds, int Minutes,int Hours)
 {
     // Binary Hours will in 12 AM/PM Format
     // 16,8,4,2,1 Saves LED Space
@@ -91,8 +91,6 @@ void ConvertTimeToBinary(int Seconds, int Hours, int Minutes)
         Serial.printf("%d",MinutesBinary[j]);
       }
     Serial.println(" Minute in Binary");
-
- 
  
  // 32,16,8,4,2,1 Seconds
     int SecondsBinary[]={0,0,0,0,0,0}; 
